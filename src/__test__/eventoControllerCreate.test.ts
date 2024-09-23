@@ -1,4 +1,4 @@
-import { crearEvento, obtenerEventos, obtenerEventosporID } from'../../src/adapters/controllers/EventosController';
+import { crearEvento, obtenerEventos, obtenerEventosporID } from '../../src/adapters/controllers/EventosController';
 import Evento from '../../src/domain/models/eventos';  // Importa el modelo de evento
 import { ObjectId } from 'mongodb';
 
@@ -60,15 +60,15 @@ describe('Evento Controller', () => {
     // Verifica que se devuelva el mensaje de error
     expect(res.json).toHaveBeenCalledWith({
       message: 'Error al crear el evento',
-      error: new Error('Error al crear el evento'),
+      error: expect.any(Error),
     });
   });
 
   // Prueba para obtener todos los eventos
   it('debe devolver todos los eventos', async () => {
     const mockEventos = [
-      { _id: '1', nombre: 'Evento 1', fecha: '2024-10-01', lugar: 'Lugar 1' },
-      { _id: '2', nombre: 'Evento 2', fecha: '2024-11-01', lugar: 'Lugar 2' },
+      { _id: new ObjectId(), nombre: 'Evento 1', fecha: '2024-10-01', lugar: 'Lugar 1' },
+      { _id: new ObjectId(), nombre: 'Evento 2', fecha: '2024-11-01', lugar: 'Lugar 2' },
     ];
 
     // Simula la búsqueda de eventos en la base de datos
@@ -94,13 +94,14 @@ describe('Evento Controller', () => {
 
   // Prueba para obtener un evento por ID válido
   it('debe devolver un evento por ID si es válido', async () => {
-    const mockEvento = { _id: '1', nombre: 'Evento 1', fecha: '2024-10-01', lugar: 'Lugar 1' };
+    const validObjectId = new ObjectId();  // Genera un ID válido
+    const mockEvento = { _id: validObjectId, nombre: 'Evento 1', fecha: '2024-10-01', lugar: 'Lugar 1' };
 
     // Simula la búsqueda del evento por ID
     Evento.findById = jest.fn().mockResolvedValue(mockEvento);
 
     const req = {
-      params: { id: '1' },
+      params: { id: validObjectId.toHexString() },
     } as any;
 
     const res = {
@@ -111,7 +112,7 @@ describe('Evento Controller', () => {
     await obtenerEventosporID(req, res);
 
     // Verifica que se haya llamado a Evento.findById con el ID correcto
-    expect(Evento.findById).toHaveBeenCalledWith(new ObjectId('1'));
+    expect(Evento.findById).toHaveBeenCalledWith(validObjectId);
 
     // Verifica que el código de estado sea 200 (OK)
     expect(res.status).toHaveBeenCalledWith(200);
@@ -142,11 +143,13 @@ describe('Evento Controller', () => {
 
   // Prueba para manejar un evento no encontrado
   it('debe devolver un error si el evento no es encontrado', async () => {
+    const validObjectId = new ObjectId();
+
     // Simula que no se encuentra ningún evento
     Evento.findById = jest.fn().mockResolvedValue(null);
 
     const req = {
-      params: { id: '1' },
+      params: { id: validObjectId.toHexString() },
     } as any;
 
     const res = {

@@ -1,7 +1,7 @@
 module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
-    testMatch: ["<rootDir>/src/__test__/**/*.ts"],  // Ajusta la ruta a la carpeta de pruebas
+    testMatch: ["<rootDir>/src/__test__/**/*.ts"],
     moduleFileExtensions: ["ts", "js"],
     transform: {
       "^.+\\.ts$": "ts-jest",
