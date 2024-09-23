@@ -1,12 +1,15 @@
 module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
-    testMatch: ["**/__tests__/**/*.ts"], // Indica dónde buscar archivos de prueba
+    testMatch: ["src/__test__/**.ts"],
     moduleFileExtensions: ["ts", "js"],
     transform: {
-    "^.+\\.ts$": "ts-jest",
-},
+      "^.+\\.ts$": "ts-jest",
+    },
     collectCoverage: true,
     coverageDirectory: "coverage",
     coverageReporters: ["text", "lcov"],
-};
+  };
+  
+
+  

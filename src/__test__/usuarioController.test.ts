@@ -12,23 +12,21 @@ describe('Usuario Controller - Crear Usuario', () => {
       nombre: 'John Doe',
       correo: 'john@example.com',
       contrasena: 'password123',
+      telefono: '1234567890',
     };
 
-    // Simulamos la creación del usuario en la base de datos
     const mockUsuario = {
       _id: 'userId123',
       ...mockUsuarioData,
-      save: jest.fn().mockResolvedValue(true),  // Mock de la función save
+      save: jest.fn().mockResolvedValue(true),
     };
 
-    // Mock del modelo Usuario para devolver el usuario simulado
     jest.spyOn(Usuario.prototype, 'save').mockResolvedValue(mockUsuario);
 
     // Simulamos que jwt.sign devuelve un token
     const mockToken = 'mocked-jwt-token';
     (jwt.sign as jest.Mock).mockReturnValue(mockToken);
 
-    // Simulamos un request con los datos del usuario a crear
     const req = {
       body: mockUsuarioData,
     };
@@ -62,18 +60,19 @@ describe('Usuario Controller - Crear Usuario', () => {
     // Simulamos que la creación del usuario falla
     jest.spyOn(Usuario.prototype, 'save').mockRejectedValue(new Error('Error al crear usuario'));
 
-    // Simulamos un request con los datos del usuario a crear
+
     const req = {
       body: {
         nombre: 'John Doe',
         correo: 'john@example.com',
         contrasena: 'password123',
+        telefono: '1234567890',
       },
     };
 
-    // Simulamos la respuesta
+
     const res = {
-      status: jest.fn().mockReturnThis(),  // Simula el método status
+      status: jest.fn().mockReturnThis(), 
       send: jest.fn(),  // Simula el método send
     };
 
