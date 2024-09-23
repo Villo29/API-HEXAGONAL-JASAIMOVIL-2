@@ -14,7 +14,7 @@ export const authMiddleware = (
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "your_secret_key") as { _id: string };
-    (req as any).userId = decoded._id; // Almacenar userId en req
+    (req as any).userId = decoded._id;
     next();
   } catch (error) {
     res.status(401).send({ error: "Token no válido." });

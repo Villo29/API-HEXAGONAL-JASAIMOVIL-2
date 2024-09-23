@@ -8,7 +8,7 @@ export const crearUsuario = async (req: Request, res: Response) => {
   try {
     const usuario = new Usuario(req.body);
     await usuario.save();
-    const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET || 'your_secret_key', { expiresIn: '1h' });
+    const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET || 'your_secret_key',);
     res.status(201).send({ usuario, token });
   } catch (error) {
     res.status(400).send(error);
@@ -18,9 +18,9 @@ export const crearUsuario = async (req: Request, res: Response) => {
 //Vlidacion de usuario usando JWT
 export const loginUsuario = async (req: Request, res: Response) => {
   try {
-    const { correo, contraseña } = req.body;
+    const { correo, contrasena } = req.body;
     const usuario = await Usuario.findOne({ correo });
-    if (!usuario || usuario.contraseña !== contraseña) {
+    if (!usuario || usuario.contrasena !== contrasena) {
       return res.status(401).send({ error: 'Credenciales no válidas.' });
     }
     const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET || 'your_secret_key',);
@@ -58,7 +58,7 @@ export const obtenerUsuarioPorId = async (req: Request, res: Response) => {
 // Actualizar un usuario por ID
 export const actualizarUsuario = async (req: Request, res: Response) => {
   const updates = Object.keys(req.body) as Array<keyof IUsuario>;
-  const allowedUpdates: Array<keyof IUsuario> = ['nombre', 'correo', 'contraseña', 'telefono'];
+  const allowedUpdates: Array<keyof IUsuario> = ['nombre', 'correo', 'contrasena', 'telefono'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {

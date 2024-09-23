@@ -18,6 +18,7 @@ router.post('/eventos', crearEvento);
 router.get('/eventos', obtenerEventos);
 router.get('/eventos/:id',obtenerEventosporID);
 
+
 router.use('/', CarritoRouter);
 
 export default router;

@@ -2,22 +2,28 @@ import { Schema, Document, model } from "mongoose";
 
 // Definir la interfaz para el modelo Carrito
 export interface ICarrito extends Document {
-  precio: number;
-  tipo: string;
-  userId: string;
+  _id: string;
+  nombre: string;
+  localidad: string;
+  correo: string;
+  carrito: string;
 }
 
 // Definir el esquema para el modelo Carrito
 const carritoSchema = new Schema<ICarrito>({
-  precio: {
-    type: Number,
-    required: true,
-  },
-  tipo: {
+  _id: {
     type: String,
     required: true,
   },
-  userId: {
+  nombre: {
+    type: String,
+    required: true,
+  },
+  localidad: {
+    type: String,
+    required: true,
+  },
+  correo: {
     type: String,
     required: true,
   },

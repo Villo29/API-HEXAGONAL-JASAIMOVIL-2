@@ -4,10 +4,10 @@ import Carrito, { ICarrito } from '../../domain/models/carrito';
 // Crear un nuevo item en el carrito
 export const agregarAlCarrito = async (req: Request, res: Response) => {
   try {
-    const { precio, tipo, userId } = req.body;
-    const carrito = new Carrito({ precio, tipo, userId });
-    await carrito.save();
-    res.status(201).send(carrito);
+    const { _id, nombre, localidad, correo,} = req.body;
+    const nuevoCarrito = new Carrito({ _id, nombre, localidad, correo});
+    await nuevoCarrito.save();
+    res.status(201).send(nuevoCarrito);
   } catch (error) {
     res.status(400).send(error);
   }

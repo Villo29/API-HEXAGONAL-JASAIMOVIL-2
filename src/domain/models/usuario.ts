@@ -4,7 +4,7 @@ import { Document, Schema, model } from 'mongoose';
 export interface IUsuario extends Document {
   nombre: string;
   correo: string;
-  contraseña: string;
+  contrasena: string;
   telefono: string;
 }
 
@@ -19,7 +19,7 @@ const usuarioSchema = new Schema<IUsuario>({
     required: true,
     unique: true,
   },
-  contraseña: {
+  contrasena: {
     type: String,
     required: true,
   },

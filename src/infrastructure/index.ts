@@ -7,7 +7,7 @@ import router from '../adapters/routes/router';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3029;
 
 // Configurar Mongoose
 mongoose.connect(process.env.MONGODB_URI || '')
@@ -26,5 +26,3 @@ app.use('/api', router);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-export default app; // Exporta el objeto app
