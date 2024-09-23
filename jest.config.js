@@ -1,7 +1,7 @@
 module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
-    testMatch: ["src/__test__/**.ts"],
+    testMatch: ["<rootDir>/src/__test__/**/*.ts"],  // Ajusta la ruta a la carpeta de pruebas
     moduleFileExtensions: ["ts", "js"],
     transform: {
       "^.+\\.ts$": "ts-jest",
@@ -10,6 +10,4 @@ module.exports = {
     coverageDirectory: "coverage",
     coverageReporters: ["text", "lcov"],
   };
-  
-
   
