@@ -1,19 +1,89 @@
-// __tests__/usuarioController.test.ts
-import { usuarioController } from '../adapters/controllers/usuarioController'; // Importa tu controlador
+// __tests__/usuarioControllerCreate.test.ts
+import { crearUsuario } from '../../src/adapters/controllers/usuarioController';  // Importa el controlador
+import jwt from 'jsonwebtoken';  // Importa jwt
+import Usuario from '../../src/domain/models/usuario';  // Importa el modelo de usuario
 
-describe('Usuario Controller', () => {
-  it('debe devolver un usuario por ID', async () => {
-    const req = { params: { id: '1' } };  // Simulación del request con ID '1'
-    const res = {
-      json: jest.fn(),  // Simula el método res.json
+jest.mock('jsonwebtoken');  // Mockea jwt para controlar su comportamiento
+
+describe('Usuario Controller - Crear Usuario', () => {
+  it('debe crear un nuevo usuario y devolver un token', async () => {
+    // Datos del usuario que simulamos
+    const mockUsuarioData = {
+      nombre: 'John Doe',
+      correo: 'john@example.com',
+      contrasena: 'password123',
     };
 
-    await usuarioController.getUsuario(req, res);  // Llama a la función getUsuario
+    // Simulamos la creación del usuario en la base de datos
+    const mockUsuario = {
+      _id: 'userId123',
+      ...mockUsuarioData,
+      save: jest.fn().mockResolvedValue(true),  // Mock de la función save
+    };
 
-    // Verifica que res.json haya sido llamado con el usuario esperado
-    expect(res.json).toHaveBeenCalledWith({
-      id: '1',
-      name: 'John Doe',  // Aquí puedes adaptar los datos a tu API
+    // Mock del modelo Usuario para devolver el usuario simulado
+    jest.spyOn(Usuario.prototype, 'save').mockResolvedValue(mockUsuario);
+
+    // Simulamos que jwt.sign devuelve un token
+    const mockToken = 'mocked-jwt-token';
+    (jwt.sign as jest.Mock).mockReturnValue(mockToken);
+
+    // Simulamos un request con los datos del usuario a crear
+    const req = {
+      body: mockUsuarioData,
+    };
+
+    // Simulamos la respuesta
+    const res = {
+      status: jest.fn().mockReturnThis(),  // Simula el método status
+      send: jest.fn(),  // Simula el método send
+    };
+
+    // Llama al controlador para crear el usuario
+    await crearUsuario(req as any, res as any);
+
+    // Verifica que el usuario se haya guardado
+    expect(Usuario.prototype.save).toHaveBeenCalled();
+
+    // Verifica que se haya generado un token JWT
+    expect(jwt.sign).toHaveBeenCalledWith({ _id: mockUsuario._id }, process.env.JWT_SECRET || 'your_secret_key');
+
+    // Verifica que res.status(201) haya sido llamado
+    expect(res.status).toHaveBeenCalledWith(201);
+
+    // Verifica que res.send haya sido llamado con el usuario y el token
+    expect(res.send).toHaveBeenCalledWith({
+      usuario: mockUsuario,
+      token: mockToken,
     });
+  });
+
+  it('debe devolver un error si hay un problema al crear el usuario', async () => {
+    // Simulamos que la creación del usuario falla
+    jest.spyOn(Usuario.prototype, 'save').mockRejectedValue(new Error('Error al crear usuario'));
+
+    // Simulamos un request con los datos del usuario a crear
+    const req = {
+      body: {
+        nombre: 'John Doe',
+        correo: 'john@example.com',
+        contrasena: 'password123',
+      },
+    };
+
+    // Simulamos la respuesta
+    const res = {
+      status: jest.fn().mockReturnThis(),  // Simula el método status
+      send: jest.fn(),  // Simula el método send
+    };
+
+    // Llama al controlador para crear el usuario
+    await crearUsuario(req as any, res as any);
+
+    // Verifica que res.status(400) haya sido llamado
+    expect(res.status).toHaveBeenCalledWith(400);
+
+    // Verifica que res.send haya sido llamado con el error
+    expect(res.send).toHaveBeenCalledWith(new Error('Error al crear usuario'));
   });
 });
