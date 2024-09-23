@@ -8,9 +8,9 @@ export const crearEvento = async (req: Request, res: Response) => {
     try {
       const evento = new Evento(req.body);
       await evento.save();
-      return res.status(201).json(evento); // Usa res.status(201).json para enviar el evento creado con el código de estado 201
+      return res.status(201).json(evento);
     } catch (error) {
-      return res.status(400).json({ message: 'Error al crear el evento', error }); // Usa res.status(400).json para enviar un error con el código de estado 400
+      return res.status(400).json({ message: 'Error al crear el evento', error });
     }
   };
 
